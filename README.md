@@ -2,9 +2,9 @@
 
 ## Introduktion
 
-This is repository är en *Train Controller*-applikation utvecklad av *Natt och Dag*-gruppen som en del av kursen *jsramverk* på *Blekinge Tekniska Högskola*.
+Den här repon är en *Train Controller*-applikation utvecklad av *Natt och Dag*-gruppen som en del av kursen *jsramverk* på *Blekinge Tekniska Högskola*.
 
-Mer information om detta projekt finns på: https://jsramverk.se/
+Mer information om det här projektet finns på: https://jsramverk.se/
 
 ## Säkerhetshål
 
