@@ -2,7 +2,7 @@
 
 ## Introduktion
 
-Den här repon är en *Train Controller*-applikation utvecklad av *Natt och Dag*-gruppen som en del av kursen *jsramverk* på *Blekinge Tekniska Högskola*.
+Det här repot är en *Train Controller*-applikation utvecklad av *Natt och Dag*-gruppen som en del av kursen *jsramverk* vid *Blekinge Tekniska Högskola (BTH)*.
 
 Mer information om det här projektet finns på: https://jsramverk.se/
 
