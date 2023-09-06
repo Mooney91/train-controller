@@ -2,9 +2,13 @@
 
 ## Introduktion
 
-Det här repot är en *Train Controller*-applikation utvecklad av *Natt och Dag*-gruppen som en del av kursen *jsramverk* vid *Blekinge Tekniska Högskola (BTH)*.
+Det här repot är en *Train Controller*-applikation utvecklad av *Nght and Day*-gruppen som en del av kursen *jsramverk* vid *Blekinge Tekniska Högskola (BTH)*.
 
 Mer information om det här projektet finns på: https://jsramverk.se/. Data och API som används under kursen finns på https://api.trafikinfo.trafikverket.se/.
+
+## Varför har vi en repo?
+
+Vi har valt att använda en repo för både frontend och backend av flera anledningar. För det första kan vi säkerställa att frontend och backend är kompatibla med varandra efter varje commit. Detta kommer förhoppningsvis att minska antalet buggar när applikationen växer i storlek. Dessutom vet vi att båda ändarna befinner sig i samma utvecklingsfas. Andra fördelar inkluderar att *Frontend* och *Backend* kan dela samma *libraries*, *dependencies* och eventuellt kod och applikationen kan testas i en repo.
 
 ## Säkerhetshål
 
