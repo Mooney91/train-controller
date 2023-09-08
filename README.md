@@ -2,17 +2,23 @@
 
 ## Introduktion
 
-Det här repot är en *Train Controller*-applikation utvecklad av *Night and Day*-gruppen som en del av kursen *jsramverk* vid *Blekinge Tekniska Högskola (BTH)*.
+Det här repot är en *Train Controller*-applikation utvecklad av *Night and Day*-gruppen som en del av kursen *jsramverk* 
+vid *Blekinge Tekniska Högskola (BTH)*.
 
-Mer information om det här projektet finns på: https://jsramverk.se/. Data och API som används under kursen finns på https://api.trafikinfo.trafikverket.se/.
+Mer information om det här projektet finns på: https://jsramverk.se/. Data och API som används under kursen finns på 
+https://api.trafikinfo.trafikverket.se/.
 
-## Varför har vi en repo?
+## Ett repo för front- och backend
 
-Vi har valt att använda en repo för både frontend och backend av flera anledningar. För det första kan vi säkerställa att frontend och backend är kompatibla med varandra efter varje commit. Detta kommer förhoppningsvis att minska antalet buggar när applikationen växer i storlek. Dessutom vet vi att båda ändarna befinner sig i samma utvecklingsfas. Andra fördelar inkluderar att *Frontend* och *Backend* kan dela samma *libraries*, *dependencies* och eventuellt kod och applikationen kan testas i en repo.
+Vi har valt att använda ett repo för både frontend och backend. Då kan vi säkerställa att frontend och backend är kompatibla 
+med varandra efter varje commit. Detta kommer förhoppningsvis att minska antalet buggar när applikationen växer i storlek. 
+Dessutom vet vi att båda ändarna befinner sig i samma utvecklingsfas. Andra fördelar inkluderar att *Frontend* och *Backend* 
+har möjlighet att dela samma *libraries*, *dependencies* och eventuellt kod om så skulle behövas, och testning av hela applikationen 
+kan underlättas.
 
 ## Säkerhetshål
 
-Säkerhetshål analyserades och åtgärdades delvis med hjälp av `npm audit`.
+Säkerhetshål i installerade npm-moduler i backend analyserades och åtgärdades med hjälp av kommandot `npm audit fix`.
 
 ### Backend
 
@@ -28,20 +34,35 @@ Säkerhetshål analyserades och åtgärdades delvis med hjälp av `npm audit`.
 
 ### Frontend
 
-Inga *vulnerabilities* hittades.
+Inga npm-moduler används (ännu i alla fall).
 
 ## Hur fick vi applikationen att fungera?
 
-För det första såg vi till att vi hade installerat alla *packages* för applikationen genom att köra `npm install`. Vi körde sedan `bash db/reset_db.bash` för att skapa en ny sqlite databas `trains.sqlite`.
+För det första såg vi till att vi hade installerat alla *packages* för applikationen genom att köra `npm install`. Vi körde sedan 
+`bash db/reset_db.bash` för att skapa en ny sqlite databas `trains.sqlite` med en `tickets` tabell.
 
-Genom att registrera med TrafikVerkets API kan vi skapa våra egen nycklar som kan sparas i `.env` inom `backend`-mappen.
+Vi skapade ett konto hos [TrafikVerkets API](https://api.trafikinfo.trafikverket.se) (ett per utvecklare), och genererade en API-nyckel,
+som sparades i en `.env`-fil i `backend`-mappen.
 
-Äntligen var `backend`-en redo att köra genom att använda `node app.js`. Sedan kunde `frontend`-en komma igång genom att starta en annan webbserver lokalt (till exempel Apache eller Python). 
+Äntligen kunde `backend`-en startas med kommandot `node app.js`.
 
-## Vilket frontend-ramverk använder vi?
+För att accessa `frontend`-en behöver man starta en till webbserver, till exempel Apache eller Pythons inbyggda. För att undvika 
+CORS-problem behöver den dessutom köras på port 9000, vilket är hårdkodat i `app.js` i `backend`-mappen. Nu kan vi navigera till 
+`frontend/index.html` och se en tabell och karta över alla tågförseningar.
 
-Ramverket som används i det här projektet kommer att vara Vue. Vårt team övervägde först två andra ramverk – *Angular* och *Svelte*.
+## Vilket frontend-ramverk har vi valt?
 
-*Angular* övervägdes eftersom det är populärt inom branschen och det är ett omfattande ramverk med en stor *community* av utvecklare. *Svelte* övervägdes också eftersom det är snabbt och minimalistiskt. Det är också ett alternativ med *open source*, vilket ansågs vara fördelaktigt för teamet. Till slut ansågs *Angular* vara för komplext för ett så litet projekt och det är inte lika lätt att lära sig. På samma sätt fungerar *Svelte* på ett helt annat sätt än de andra ramverken och kan vara för svåra att implementera.
+Ramverket som kommer att användas i det här projektet är [Vue](https://vuejs.org). Vårt team övervägde också två andra ramverk – *Angular* och *Svelte*.
 
-*Vue* är ett alternativ med *open source* som är lätt att lära sig, blir populärt och har en bra *community* av utvecklare. *Vue* är också lätt och mindre jämfört med *Angular* både när du jämför det med filstorlek och med kodrader.
+*Angular* övervägdes eftersom det är populärt inom branschen och det är ett omfattande ramverk med en stor *community* av utvecklare. Dock
+bedömdes att ramverket är onödigt komplext och stort för vår relativt lilla applikation, och det kan också ta tid att sätta sig in i på
+den begränsade tid vi har till förfogande.
+
+*Svelte* övervägdes eftersom det skall vara snabbt och minimalistiskt. Det är också ett tydligt *open source*-alternativ, vilket ansågs vara 
+fördelaktigt för teamet. *Svelte* är dock ett mindre använt ramverk och kanske inte lika kommersiellt gångbart (mindre attraktivt på CV:n).
+Syntaxen verkar i vissa bitar också lite udda, vilket kan ge en "dålig" känsla att jobba med.
+
+*Vue* är ett alternativ med *open source* som är lätt att lära sig (hoppas vi), är populärt, och har en bra *community* av utvecklare. 
+*Vue* har likheter med *Angular*, men är mera lättviktigt än *Angular*, både vad gäller filstorlek och antal kodrader som behövs för att lösa
+ett problem.
+
