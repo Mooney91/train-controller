@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 const io = require("socket.io")(httpServer, {
   cors: {
     origin: "http://localhost:9000",
-    methods: ["GET", "POST"]
+    methods: ["GET", "POST"],
   }
 });
 
