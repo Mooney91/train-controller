@@ -66,3 +66,9 @@ Syntaxen verkar i vissa bitar också lite udda, vilket kan ge en "dålig" känsl
 *Vue* har likheter med *Angular*, men är mera lättviktigt än *Angular*, både vad gäller filstorlek och antal kodrader som behövs för att lösa
 ett problem.
 
+## TO-DO
+
+### main.js
+Look at main.js - hasOwnProperty should be replaced *no-prototype-builtins* error
+io not defined.
+Is Leaflet installed??? L not defined.
