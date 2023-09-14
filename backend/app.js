@@ -31,6 +31,7 @@ const io = require("socket.io")(httpServer, {
 const port = 1337
 
 app.get('/', (req, res) => {
+  console.log("hello!");
   res.json({
       data: 'Hello World!'
   })
