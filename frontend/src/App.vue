@@ -1,3 +1,19 @@
+<script>
+    import TrafficController from './components/TrafficController.vue'
+
+    export default {
+    name: 'App',
+    components: {
+        TrafficController
+    }
+    }
+</script>
+
+<template>
+    <TrafficController msg="Välkommen till Traffic Controller"/>
+</template>
+
+<style>
 * {
     margin: 0;
     padding: 0;
@@ -77,3 +93,5 @@ p {
 .ticket-container {
     padding: 2rem;
 }
+
+</style>
