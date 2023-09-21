@@ -2,11 +2,15 @@ const database = require('../db/database.js');
 
 const tickets = {
     getTickets: async function getTickets(req, res){
-        var db = await database.openDb();
+        const db = await database.getDb();
 
-        var allTickets = await db.all(`SELECT *, ROWID as id FROM tickets ORDER BY ROWID DESC`);
-
-        await db.close();
+        // FIND ALL TICKETS
+        // const removeAllTickets = await db.collection.deleteMany({})
+        const allTickets = await db.collection.find({}).toArray();
+        
+        console.log(allTickets)
+        
+        await db.client.close();
 
         return res.json({
             data: allTickets
@@ -14,20 +18,33 @@ const tickets = {
     },
 
     createTicket: async function createTicket(req, res){
-        var db = await database.openDb();
+        const db = await database.getDb();
 
-        const result = await db.run(
-            'INSERT INTO tickets (code, trainnumber, traindate) VALUES (?, ?, ?)',
-            req.body.code,
-            req.body.trainnumber,
-            req.body.traindate,
-        );
+        const allTickets = await db.collection.find({}).toArray();
+        const numTickets = allTickets.length
 
-        await db.close();
+        const doc = {
+            id: numTickets + 1,
+            code: req.body.code,
+            trainnumber: req.body.trainnumber,
+            traindate: req.body.traindate
+        };
+        
+        const result = await db.collection.insertOne(doc);
+
+        // CHECK IF RESULT IS OK - TO FIX
+        
+        // if (result.result.ok) {
+        //     console.log(res.status(201).json({ data: result.ops }));
+        // } else {
+        //     console.log("Result not ok.");
+        // }
+
+        await db.client.close();
 
         return res.json({
             data: {
-                id: result.lastID,
+                id: numTickets,
                 code: req.body.code,
                 trainnumber: req.body.trainnumber,
                 traindate: req.body.traindate,

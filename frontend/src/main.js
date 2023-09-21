@@ -115,7 +115,6 @@ function renderTicketView(item) {
             </div>
         </div>`;
 
-
     let backButton = document.getElementById("back");
     let reasonCodeSelect = document.getElementById("reason-code");
     let newTicketForm = document.getElementById("new-ticket-form");
@@ -152,7 +151,9 @@ function renderTicketView(item) {
     fetch("http://localhost:1337/tickets")
         .then((response) => response.json())
         .then((result) => {
-            var lastId = result.data[1] ? result.data[1].id : 0;
+            // var lastId = result.data[1] ? result.data[1].id : 0;
+            // ID OF NEW "ERRAND" IS THE NUMBER OF TICKETS
+            var lastId = result.data.length;
 
             newTicketId = lastId + 1;
 
@@ -168,8 +169,6 @@ function renderTicketView(item) {
                 oldTickets.appendChild(element);
             });
         });
-
-
 
     fetch("http://localhost:1337/codes")
         .then((response) => response.json())
