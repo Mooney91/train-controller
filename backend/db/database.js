@@ -1,20 +1,18 @@
-const mongo = require("mongodb").MongoClient;
+const { MongoClient } = require("mongodb");
+const dsn = `mongodb://localhost:27017`;
+let dbName = "trains";
+
+if (process.env.NODE_ENV === 'test') {
+    dbName = "test";
+}
+
 const collectionName = "tickets";
 
 const database = {
-    getDb: async function getDb() {
-        let dsn = `mongodb://localhost:27017/tickets`;
-
-        if (process.env.NODE_ENV === 'test') {
-            dsn = "mongodb://localhost:27017/test";
-        }
-
-        const client  = await mongo.connect(dsn, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        });
-        const db = await client.db();
-        const collection = await db.collection(collectionName);
+    getDb: async function () {
+        const client = new MongoClient(dsn);
+        const db = client.db(dbName);
+        const collection = db.collection(collectionName);
 
         return {
             db: db,
