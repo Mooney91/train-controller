@@ -2,7 +2,7 @@ import { fileURLToPath, URL } from 'node:url'
 
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-
+/// <reference types="vitest" />
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -15,5 +15,10 @@ export default defineConfig({
   },
   server: [
     port = 9000,
-  ]
+  ],
+  test: {
+    coverage: {
+      provider: 'v8',
+    },
+  },
 })
