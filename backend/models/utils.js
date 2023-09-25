@@ -2,18 +2,29 @@ const database = require('../db/database.js');
 
 const trains = {
     fetchAllDelayedTrains: async function fetchAllDelayedTrains() {
+        // CHANGED FROM SQL (openDb) TO MONGODB (getDb)
         let db;
 
         try {
-            db = await database.openDb(version);
+            db = await database.getDb();
 
-        } catch(error) {
-            return {
-                status: error.status,
-                message: error.message,
-            };
+            const filter = { code: code };
+            const keyObject = await db.collection.findOne(filter);
+
+            if (keyObject) {
+                return res.json({ data: keyObject });
+            }
+        } catch (e) {
+            return res.status(500).json({
+                errors: {
+                    status: 500,
+                    source: "/",
+                    title: "Database error",
+                    detail: e.message
+                }
+            });
         } finally {
-            await db.close();
+            await db.client.close();
         }
     }
 };

@@ -1,18 +1,24 @@
-const sqlite3 = require('sqlite3').verbose();
-const { open } = require('sqlite');
+const { MongoClient } = require("mongodb");
+const dsn = `mongodb://localhost:27017`;
+let dbName = "trains";
+
+if (process.env.NODE_ENV === 'test') {
+    dbName = "test";
+}
+
+const collectionName = "tickets";
 
 const database = {
-    openDb: async function openDb() {
-        let dbFilename = `./db/trains.sqlite`;
+    getDb: async function () {
+        const client = new MongoClient(dsn);
+        const db = client.db(dbName);
+        const collection = db.collection(collectionName);
 
-        if (process.env.NODE_ENV === 'test') {
-            dbFilename = "./db/test.sqlite";
-        }
-
-        return await open({
-            filename: dbFilename,
-            driver: sqlite3.Database
-        });
+        return {
+            db: db,
+            collection: collection,
+            client: client,
+        };
     }
 };
 
