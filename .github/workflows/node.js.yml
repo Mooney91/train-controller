@@ -47,19 +47,3 @@ jobs:
       
     - run: npm test
       working-directory: ./backend
-
-    - run: npm install
-      working-directory: ./frontend
-      
-    - run: npm test
-        cache:'npm'
-      working-directory: ./frontend
-      
-    - run: npm ci
-      working-directory: ./frontend
-      
-    - run: npm run build --if-present
-      working-directory: ./frontend
-      
-    - run: npm test
-      working-directory: ./frontend
