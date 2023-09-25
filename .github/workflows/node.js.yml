@@ -24,15 +24,15 @@ jobs:
 
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
-      working-directory: ./backend
       with:
         node-version: ${{ matrix.node-version }}
+      working-directory: ./backend
 
     - name: Start MongoDB
       uses: supercharge/mongodb-github-action@1.7.0
-      working-directory: ./backend
       with:
         mongodb-version: ${{ matrix.mongodb-version }}
+      working-directory: ./backend
 
     - run: npm install
       working-directory: ./backend
