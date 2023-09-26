@@ -1,7 +1,8 @@
 const sqlite3 = require("sqlite3").verbose();
 const { open } = require("sqlite");
 const { MongoClient } = require("mongodb");
-const dsnMongo = "mongodb://localhost:27017";
+// const dsnMongo = "mongodb://localhost:27017";
+const dsnMongo = "mongodb+srv://${process.env.ATLAS_USERNAME}:${process.env.ATLAS_PASSWORD}@cluster0.djy5hpi.mongodb.net/?retryWrites=true&w=majority"
 let dbName = "trains";
 
 if (process.env.NODE_ENV === 'test') {
@@ -9,7 +10,6 @@ if (process.env.NODE_ENV === 'test') {
 }
 
 const collectionName = "tickets";
-
 
 const database = {
     openDb: async function openDb() {

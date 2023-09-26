@@ -35,7 +35,8 @@ if (process.env.NODE_ENV !== 'test') {
     });
 }
 
-const port = 1337;
+// const port = 1337;
+const port = process.env.PORT || 1337;
 
 app.get('/', (req, res) => {
     res.json({
