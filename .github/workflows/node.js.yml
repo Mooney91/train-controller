@@ -13,7 +13,8 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18, 20]
+        node-version: [18]
+#        node-version: [18, 20]
         mongodb-version: ['6.0']
 
     steps:
@@ -33,7 +34,7 @@ jobs:
     - run: npm install
       working-directory: ./backend
       
-    - run: npm test-ci
+    - run: npm run test-ci
       working-directory: ./backend
 
 #    - run: npm install
