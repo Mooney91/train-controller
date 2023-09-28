@@ -24,8 +24,13 @@ const database = {
     getDb: function () {
         console.log(`*** getDb: Database: ${dbName} DSN: ${dsnMongo} ***`);
 
+        const client = new MongoClient(dsnMongo, { monitorCommands: true });
+
+        client.on("commandFailed", (event) => {
+            console.log(`Received commandFailed: ${JSON.stringify(event, null, 2)}`);
+        });
+
         try {
-            const client = new MongoClient(dsnMongo);
             const db = client.db(dbName);
             const collection = db.collection(collectionName);
 
