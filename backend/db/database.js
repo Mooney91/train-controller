@@ -22,17 +22,22 @@ const database = {
     },
 
     getDb: function () {
-        // console.log(`*** getDb: ${dbName} ***`);
+        console.log(`*** getDb: Database: ${dbName} DSN: ${dsnMongo} ***`);
 
-        const client = new MongoClient(dsnMongo);
-        const db = client.db(dbName);
-        const collection = db.collection(collectionName);
+        try {
+            const client = new MongoClient(dsnMongo);
+            const db = client.db(dbName);
+            const collection = db.collection(collectionName);
 
-        return {
-            db: db,
-            collection: collection,
-            client: client,
-        };
+            return {
+                db: db,
+                collection: collection,
+                client: client,
+            };
+        } catch (err) {
+            console.log(`Error connecting to MongoDB database: ${dbName} with DSN: ${dsnMongo}`);
+            console.log(err);
+        }
     }
 };
 
