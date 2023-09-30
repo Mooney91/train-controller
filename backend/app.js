@@ -29,7 +29,8 @@ if (process.env.NODE_ENV !== 'test') {
     // use 'var' to avoid block scope
     var io = require("socket.io")(httpServer, {
         cors: {
-            origin: "http://localhost:5173",
+            // origin: "http://localhost:5173",
+            origin: "http://www.student.bth.se/~zamo22/editor/",
             methods: ["GET", "POST"]
         }
     });

@@ -5,6 +5,14 @@ import App from './App.vue'
 
 createApp(App).mount('#app')
 
+const backend = "https://jsramverk-train-zamo22.azurewebsites.net"
+
+if (process.env.NODE_ENV == 'test') {
+    const backend = "http://localhost:1337"
+}
+
+
+
 function renderMainView() {
     let container = document.getElementById("container");
 
@@ -19,7 +27,7 @@ function renderMainView() {
             </div>
             <div id="map" class="map"></div>`;
 
-    const socket = io("http://localhost:1337");
+    const socket = io(backend);
 
     const map = L.map('map').setView([62.173276, 14.942265], 5);
 
@@ -44,7 +52,7 @@ function renderMainView() {
 
     let delayed = document.getElementById("delayed-trains");
 
-    fetch("http://localhost:1337/delayed")
+    fetch('${backend}/delayed')
         .then((response) => response.json())
         .then(function(result) {
             return renderDelayedTable(result.data, delayed);
@@ -135,7 +143,7 @@ function renderTicketView(item) {
             traindate: item.EstimatedTimeAtLocation.substring(0, 10),
         };
 
-        fetch("http://localhost:1337/tickets", {
+        fetch('${backend}/tickets', {
             body: JSON.stringify(newTicket),
             headers: {
               'content-type': 'application/json'
@@ -148,7 +156,7 @@ function renderTicketView(item) {
             });
     });
 
-    fetch("http://localhost:1337/tickets")
+    fetch('${backend}/tickets')
         .then((response) => response.json())
         .then((result) => {
             // var lastId = result.data[1] ? result.data[1].id : 0;
@@ -170,7 +178,7 @@ function renderTicketView(item) {
             });
         });
 
-    fetch("http://localhost:1337/codes")
+    fetch('${backend}/codes')
         .then((response) => response.json())
         .then((result) => {
             result.data.forEach((code) => {
