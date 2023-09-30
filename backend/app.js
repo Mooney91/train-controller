@@ -30,7 +30,7 @@ if (process.env.NODE_ENV !== 'test') {
     var io = require("socket.io")(httpServer, {
         cors: {
             // origin: "http://localhost:5173",
-            origin: "http://www.student.bth.se",
+            origin: "https://www.student.bth.se",
             methods: ["GET", "POST"]
         }
     });
