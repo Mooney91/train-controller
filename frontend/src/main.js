@@ -6,12 +6,7 @@ import App from './App.vue'
 createApp(App).mount('#app')
 
 const backend = "https://jsramverk-train-zamo22.azurewebsites.net"
-
-// if (process.env.NODE_ENV == 'test') {
-//     const backend = "http://localhost:1337"
-// }
-
-
+// const backend = "http://localhost:1337"
 
 function renderMainView() {
     let container = document.getElementById("container");
@@ -190,8 +185,6 @@ function renderTicketView(item) {
                 reasonCodeSelect.appendChild(element);
             });
         });
-
-
 }
 
 renderMainView();
