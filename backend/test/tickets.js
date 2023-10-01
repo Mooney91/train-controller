@@ -4,13 +4,13 @@ process.env.NODE_ENV = "test";
 //process.env.DB = "sqlite"; // DB is set in test script in package.json
 //process.env.DB = "mongo";
 
+const server = require("../app.js");
 const database = require("../db/database.js");
 const tickets = require("../models/tickets.js");
 //const assert = require("assert"); // could be used alternatively instead of should
 //const should = require("should"); // chai has its own implementation of should
 const chai = require("chai");
 const chaiHttp = require("chai-http");
-const server = require("../app.js");
 
 chai.should();
 chai.use(chaiHttp);

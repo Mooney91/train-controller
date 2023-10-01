@@ -26,14 +26,19 @@ if (process.env.NODE_ENV !== 'test') {
     // use morgan to log at command line
     app.use(morgan('combined')); // 'combined' outputs the Apache style LOGs
 
-    // use 'var' to avoid block scope
-    var io = require("socket.io")(httpServer, {
+    const corsOrigin = {
         cors: {
-            // origin: "http://localhost:5173",
             origin: "https://www.student.bth.se",
             methods: ["GET", "POST"]
         }
-    });
+    };
+
+    if (process.env.CORS_ORIGIN === 'local') {
+        corsOrigin.cors.origin = "http://localhost:5173";
+    }
+
+    // use 'var' to avoid block scope
+    var io = require("socket.io")(httpServer, corsOrigin);
 }
 
 // const port = 1337;

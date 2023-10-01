@@ -4,11 +4,11 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "DB='mongo' node app.js",
+    "start": "node app.js",
     "production": "NODE_ENV='production' node app.js",
-    "test": "DB='sqlite' nyc -s mocha && DB='mongo' nyc -s --no-clean mocha && nyc report -r=html -r=text",
-    "test-ci": "DB='sqlite' nyc -s mocha && DB='mongo' nyc -s --no-clean mocha && nyc report -r=text",
-    "test-ci-mongo": "DB='mongo' nyc -r=text mocha",
+    "test": "DB='sqlite' nyc -s mocha && DB='mongo' MONGO_DEPLOY='atlas' nyc -s --no-clean mocha && nyc report -r=html -r=text",
+    "test-ci": "DB='sqlite' nyc -s mocha && DB='mongo' MONGO_DEPLOY='local' nyc -s --no-clean mocha && nyc report -r=text",
+    "test-ci-mongo": "DB='mongo' MONGO_DEPLOY='local' nyc -r=text mocha",
     "eslint": "eslint ."
   },
   "keywords": [],

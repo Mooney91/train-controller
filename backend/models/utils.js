@@ -1,7 +1,7 @@
 const database = require('../db/database.js');
 
 const trains = {
-    fetchAllDelayedTrains: async function fetchAllDelayedTrains() {
+    fetchAllDelayedTrains: async function fetchAllDelayedTrains(req, res, code) {
         // CHANGED FROM SQL (openDb) TO MONGODB (getDb)
         let db;
 
