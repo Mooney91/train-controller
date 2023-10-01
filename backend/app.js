@@ -29,13 +29,15 @@ if (process.env.NODE_ENV !== 'test') {
     // use 'var' to avoid block scope
     var io = require("socket.io")(httpServer, {
         cors: {
-            origin: "http://localhost:5173",
+            // origin: "http://localhost:5173",
+            origin: "https://www.student.bth.se",
             methods: ["GET", "POST"]
         }
     });
 }
 
-const port = 1337;
+// const port = 1337;
+const port = process.env.PORT || 1337;
 
 app.get('/', (req, res) => {
     res.json({
