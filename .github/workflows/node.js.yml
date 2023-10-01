@@ -20,8 +20,8 @@ jobs:
     steps:
     - name: Git checkout
       uses: actions/checkout@v3
-      with:
-        ref: testing-ci
+#      with:
+#        ref: testing-ci
 
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
@@ -36,6 +36,9 @@ jobs:
     - run: npm install
       working-directory: ./backend
       
+    - run: npm run eslint
+      working-directory: ./backend
+
     - run: npm run test-ci
       working-directory: ./backend
 
