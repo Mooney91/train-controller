@@ -4,7 +4,13 @@ const tickets = {
     getTickets: async function getTickets(req, res) {
         let allTickets = [];
 
-        if (process.env.DB === 'mongo') {
+        if (process.env.DB === 'sqlite') {
+            const db = await database.openDb();
+
+            allTickets = await db.all(`SELECT *, ROWID as id FROM tickets ORDER BY ROWID DESC`);
+
+            await db.close();
+        } else {
             const db = database.getDb();
             const options = {
                 sort: { id: "desc" },
@@ -15,12 +21,6 @@ const tickets = {
             // console.log(allTickets);
 
             await db.client.close();
-        } else {
-            const db = await database.openDb();
-
-            allTickets = await db.all(`SELECT *, ROWID as id FROM tickets ORDER BY ROWID DESC`);
-
-            await db.close();
         }
 
         return res.status(200).json({
@@ -31,7 +31,27 @@ const tickets = {
     createTicket: async function createTicket(req, res) {
         let newId = 0;
 
-        if (process.env.DB === 'mongo') {
+        if (process.env.DB === 'sqlite') {
+            const db = await database.openDb();
+
+            const result = await db.run(
+                'INSERT INTO tickets (code, trainnumber, traindate) VALUES (?, ?, ?)',
+                [ req.body.code, req.body.trainnumber, req.body.traindate],
+                async (err) => {
+                    if (err) {
+                        await db.close();
+                        console.log("Failed to insert new ticket in database.\n", err.message);
+
+                        return res.status(500).json({
+                            data: {}
+                        });
+                    }
+                }
+            );
+
+            await db.close();
+            newId = result.lastID;
+        } else {
             const db = database.getDb();
             const numTickets = await db.collection.countDocuments({}, { hint: "_id_" });
 
@@ -54,26 +74,6 @@ const tickets = {
                     data: {}
                 });
             }
-        } else {
-            const db = await database.openDb();
-
-            const result = await db.run(
-                'INSERT INTO tickets (code, trainnumber, traindate) VALUES (?, ?, ?)',
-                [ req.body.code, req.body.trainnumber, req.body.traindate],
-                async (err) => {
-                    if (err) {
-                        await db.close();
-                        console.log("Failed to insert new ticket in database.\n", err.message);
-
-                        return res.status(500).json({
-                            data: {}
-                        });
-                    }
-                }
-            );
-
-            await db.close();
-            newId = result.lastID;
         }
 
 

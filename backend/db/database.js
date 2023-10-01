@@ -1,8 +1,14 @@
 const sqlite3 = require("sqlite3").verbose();
 const { open } = require("sqlite");
 const { MongoClient } = require("mongodb");
-// const dsnMongo = "mongodb://localhost:27017";
-const dsnMongo = `mongodb+srv://${process.env.ATLAS_USERNAME}:${process.env.ATLAS_PASSWORD}@cluster0.djy5hpi.mongodb.net/?retryWrites=true&w=majority`
+
+let dsnMongo = `mongodb+srv://${process.env.ATLAS_USERNAME}:${process.env.ATLAS_PASSWORD}` +
+               `@${process.env.ATLAS_CLUSTER}.mongodb.net/?retryWrites=true&w=majority`;
+
+if (process.env.MONGO_DEPLOY === 'local') {
+    dsnMongo = "mongodb://localhost:27017";
+}
+
 let dbName = "trains";
 
 if (process.env.NODE_ENV === 'test') {
@@ -22,17 +28,27 @@ const database = {
     },
 
     getDb: function () {
-        // console.log(`*** getDb: ${dbName} ***`);
+        // console.log(`*** getDb: Database: ${dbName} DSN: ${dsnMongo} ***`);
 
-        const client = new MongoClient(dsnMongo);
-        const db = client.db(dbName);
-        const collection = db.collection(collectionName);
+        try {
+            const client = new MongoClient(dsnMongo, { monitorCommands: true });
 
-        return {
-            db: db,
-            collection: collection,
-            client: client,
-        };
+            client.on("commandFailed", (event) => {
+                console.log(`Received commandFailed: ${JSON.stringify(event, null, 2)}`);
+            });
+
+            const db = client.db(dbName);
+            const collection = db.collection(collectionName);
+
+            return {
+                db: db,
+                collection: collection,
+                client: client,
+            };
+        } catch (err) {
+            console.log(`Error connecting to MongoDB database: ${dbName} with DSN: ${dsnMongo}`);
+            console.log(err);
+        }
     }
 };
 
