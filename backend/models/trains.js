@@ -44,7 +44,7 @@ async function fetchTrainPositions(io) {
                         .map((t=>parseFloat(t))).reverse();
 
                     const trainObject = {
-                        trainnumber: changedPosition.Train.AdvertisedTrainNumber,
+                        trainnumber: changedPosition.Train.OperationalTrainNumber,
                         position: position,
                         timestamp: changedPosition.TimeStamp,
                         bearing: changedPosition.Bearing,
@@ -53,11 +53,11 @@ async function fetchTrainPositions(io) {
                     };
 
                     if (Object.hasOwn(trainPositions,
-                        changedPosition.Train.AdvertisedTrainNumber)) {
+                        changedPosition.Train.OperationalTrainNumber)) {
                         socket.emit("message", trainObject);
                     }
 
-                    trainPositions[changedPosition.Train.AdvertisedTrainNumber] = trainObject;
+                    trainPositions[changedPosition.Train.OperationalTrainNumber] = trainObject;
                 }
             } catch (e) {
                 console.log(e);
