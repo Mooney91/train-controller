@@ -62,9 +62,14 @@ function renderMap(delayedData) {
 
                 marker.setLatLng(data.position);
             } else {
-                let marker = L.marker(data.position).bindPopup(data.trainnumber).addTo(map);
-
+                let marker = L.marker(data.position).addTo(map);
+                marker.bindPopup(data.trainnumber);
                 markers[data.trainnumber] = marker
+                marker.on('click', function (e) {
+                    // EVENT LISTENER TO SHOW A SPECIFIC TRAIN
+                    renderSingleView(undefined, data);
+                });
+                map.addLayer(marker);
             }
         }
     });     
@@ -84,9 +89,17 @@ function renderDelayedTable(data, table) {
             </div>
             <div class="delay">
                 ${outputDelay(item)}
+            </div>
+            <div>
+               <button class="ticket-view">Skapa nytt ärende</button>
             </div>`;
 
         element.addEventListener("click", function() {
+            renderSingleView(item.OperationalTrainNumber, undefined)
+        });
+
+        let ticketView = element.getElementsByClassName("ticket-view")[0];
+        ticketView.addEventListener("click", function() {
             renderTicketView(item);
         });
 
@@ -203,4 +216,68 @@ function renderTicketView(item) {
         });
 }
 
+function renderSingleView(delayedTrainNumber = "", data = {}) {
+    const socket = io(backend);
+    let container = document.getElementById("container");
+
+    while (container.firstChild) {
+        container.removeChild(container.firstChild);
+    }
+
+    container.innerHTML = `<div class="delayed">
+                <h1>Försenade tåg</h1>
+                <button id="main-view">Alla tåg</button>
+                <div id="delayed-trains" class="delayed-trains"></div>
+            </div>
+            <div id="map" class="map"></div>`;
+
+    // BUTTON TO RETURN USER TO THE MAINVIEW
+    let mainView = document.getElementById("main-view");
+    mainView.addEventListener("click", function(e) {
+        renderMainView()
+    })
+
+    // FIND DATA
+    if (!data || Object.keys(data).length === 0) {
+        // USER HAS CLICKED ON A DELAYED TRAIN FROM THE LIST - DATA UNKNOWN
+        fetch(`${backend}/position?train=${delayedTrainNumber}`)
+            .then((response) => response.json())
+            .then(function(result) {
+                data = result;
+                renderSingleTable(data.data);
+                if   (data.data && data.data.position) {
+                    renderSingleMap(data.data);
+                } else {
+                    alert("There is no position listed for this train.")
+                }
+            });
+    } else {
+        // USER HAS CLICKED ON A MARKER - DATA IS KNOWN
+        renderSingleTable(data);
+        renderSingleMap(data);
+    }
+
+}
+
+function renderSingleMap(data) {
+    const map = L.map('map').setView([62.173276, 14.942265], 5);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+    L.marker(data.position).bindPopup(data.trainnumber).addTo(map);
+}
+
+function renderSingleTable(data) {
+    let delayed = document.getElementById("delayed-trains");
+
+    fetch(`${backend}/delayed`)
+        .then((response) => response.json())
+        .then(function(result) {
+            const items = result.data.filter((item) => item.OperationalTrainNumber === data.trainnumber);
+            return renderDelayedTable(items, delayed);
+        });
+}
 renderMainView();
