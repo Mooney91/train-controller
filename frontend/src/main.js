@@ -5,8 +5,8 @@ import App from './App.vue'
 
 createApp(App).mount('#app')
 
-const backend = "https://jsramverk-train-zamo22.azurewebsites.net"
-// const backend = "http://localhost:1337"
+// const backend = "https://jsramverk-train-zamo22.azurewebsites.net"
+const backend = "http://localhost:1337"
 
 function renderMainView() {
     let container = document.getElementById("container");
@@ -22,7 +22,29 @@ function renderMainView() {
             </div>
             <div id="map" class="map"></div>`;
 
+    // FOR MAP
+    fetch(`${backend}/delayed`)
+        .then((response) => response.json())
+        .then(function(result) {
+            return renderMap(result.data);
+        });
+    
+    // FOR TABLE
+    let delayed = document.getElementById("delayed-trains");
+
+    fetch(`${backend}/delayed`)
+        .then((response) => response.json())
+        .then(function(result) {
+            return renderDelayedTable(result.data, delayed);
+        });
+}
+
+function renderMap(delayedData) {
     const socket = io(backend);
+    let delayedTrains = []
+    delayedData.forEach((item) => {
+        delayedTrains.push(item.OperationalTrainNumber);
+    })
 
     const map = L.map('map').setView([62.173276, 14.942265], 5);
 
@@ -34,24 +56,18 @@ function renderMainView() {
     let markers = {};
 
     socket.on("message", (data) => {
-        if (markers.hasOwnProperty(data.trainnumber)) {
-            let marker = markers[data.trainnumber]
+        if (delayedTrains.includes(data.trainnumber)) {
+            if (markers.hasOwnProperty(data.trainnumber)) {
+                let marker = markers[data.trainnumber]
 
-            marker.setLatLng(data.position);
-        } else {
-            let marker = L.marker(data.position).bindPopup(data.trainnumber).addTo(map);
+                marker.setLatLng(data.position);
+            } else {
+                let marker = L.marker(data.position).bindPopup(data.trainnumber).addTo(map);
 
-            markers[data.trainnumber] = marker
+                markers[data.trainnumber] = marker
+            }
         }
-    });
-
-    let delayed = document.getElementById("delayed-trains");
-
-    fetch(`${backend}/delayed`)
-        .then((response) => response.json())
-        .then(function(result) {
-            return renderDelayedTable(result.data, delayed);
-        });
+    });     
 }
 
 function renderDelayedTable(data, table) {
