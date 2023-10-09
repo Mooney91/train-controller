@@ -14,7 +14,7 @@ const tickets = {
             const db = database.getDb();
             const options = {
                 sort: { id: "desc" },
-                projection: { _id: 0 }
+                // projection: { _id: 0 }
             };
 
             allTickets = await db.collection.find({}, options).toArray();
@@ -85,6 +85,44 @@ const tickets = {
                 traindate: req.body.traindate,
             }
         });
+    },
+
+    updateTicket: async function updateTicket(req, res) {
+        const db = database.getDb();
+        const ObjectId = require('mongodb').ObjectId;
+        const filter = { _id: new ObjectId(req.body._id) };
+        const updateDocument = {
+            $set: {
+                code: req.body.code,
+                trainnumber: req.body.trainnumber,
+                traindate: req.body.traindate,
+            }
+        };
+
+        // UPDATE DOCUMENT
+        const result = await db.collection.updateOne(
+            filter,
+            updateDocument,
+        );
+
+        // ERROR HANDLING
+        if (!result.acknowledged) {
+            console.log("Failed to update ticket in database.");
+
+            return res.status(500).json({
+                data: {}
+            });
+        }
+
+        return res.status(201).json({
+            data: {
+                // id: req.body.id,
+                code: req.body.code,
+                trainnumber: req.body.trainnumber,
+                traindate: req.body.traindate,
+            }
+        });
+
     }
 };
 
