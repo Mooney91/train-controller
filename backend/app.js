@@ -31,12 +31,13 @@ if (process.env.NODE_ENV !== 'test') {
         cors: {
             origin: "https://www.student.bth.se",
             // origin: "http://localhost:5173",
-            methods: ["GET", "POST"]
+            methods: ["GET", "POST", "PUT"]
         }
     };
 
     if (process.env.CORS_ORIGIN === 'local') {
         corsOrigin.cors.origin = "http://localhost:5173";
+        corsOrigin.cors.methods = ["GET", "POST", "PUT"];
     }
 
     // use 'var' to avoid block scope
