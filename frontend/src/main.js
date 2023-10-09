@@ -346,7 +346,6 @@ function renderUpdateTicket(ticket) {
         <div class="ticket">
             <a href="" id="back"><- Tillbaka</a>
             <h1>Uppdatera ärende ${ticket.id}</h1>
-            <div>${JSON.stringify(ticket)}</div>
             <form id="update-ticket-form">
                 <label for="trainnumber">Tåg nummer:</label><br>
                 <input type="text" id="trainnumber" name="trainnumber" value="${ticket.trainnumber}"><br>
