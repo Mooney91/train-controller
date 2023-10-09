@@ -1,6 +1,6 @@
 import './assets/main.css'
 
-import { createApp } from 'vue'
+import { createApp, render } from 'vue'
 import App from './App.vue'
 
 createApp(App).mount('#app')
@@ -17,10 +17,21 @@ function renderMainView() {
 
     container.innerHTML = `<div class="delayed">
                 <h1>Försenade tåg</h1>
-
+                <button id="existing-tickets">Hantera befintliga ärenden</button>
                 <div id="delayed-trains" class="delayed-trains"></div>
             </div>
             <div id="map" class="map"></div>`;
+
+    // FOR TICKETS
+
+    let existingTickets = document.getElementById("existing-tickets")
+    existingTickets.addEventListener("click", function(e) {
+        fetch(`${backend}/tickets`)
+            .then((response) => response.json())
+            .then((result) => {
+                return renderExistingTickets(result.data)
+            });
+    })
 
     // FOR MAP
     fetch(`${backend}/delayed`)
@@ -90,20 +101,24 @@ function renderDelayedTable(data, table) {
             <div class="delay">
                 ${outputDelay(item)}
             </div>
-            <div>
-               <button class="ticket-view">Skapa nytt ärende</button>
-            </div>`;
+            `;
 
         element.addEventListener("click", function() {
             renderSingleView(item.OperationalTrainNumber, undefined)
         });
 
-        let ticketView = element.getElementsByClassName("ticket-view")[0];
+        let createTicket = document.createElement("div");
+        createTicket.innerHTML = `<div>
+        <button class="ticket-view">Skapa nytt ärende</button>
+        </div>`;
+
+        let ticketView = createTicket.getElementsByClassName("ticket-view")[0];
         ticketView.addEventListener("click", function() {
             renderTicketView(item);
         });
 
         table.appendChild(element);
+        table.appendChild(createTicket);
     });
 }
 
@@ -280,4 +295,116 @@ function renderSingleTable(data) {
             return renderDelayedTable(items, delayed);
         });
 }
+
+function renderExistingTickets(data) {
+    let container = document.getElementById("container");
+
+    while (container.firstChild) {
+        container.removeChild(container.firstChild);
+    }
+    
+    container.innerHTML = `<div class="ticket-container">
+        <div class="ticket">
+            <a href="" id="back"><- Tillbaka</a>
+            <h1>Hantera befintliga ärenden</h1>
+                
+            <div id="existing-tickets"></div>
+        </div>`;
+
+    let backButton = document.getElementById("back");
+    let existingTickets = document.getElementById("existing-tickets");
+
+    backButton.addEventListener("click", function(event) {
+        event.preventDefault();
+
+        renderMainView();
+    });
+
+    data.forEach((ticket) => {
+        let element = document.createElement("div");
+
+        element.innerHTML = `${ticket.id} - ${ticket.code} - ${ticket.trainnumber} - ${ticket.traindate} <button id="update-ticket">Uppdatera</button>`;
+        
+        let updateTicket = element.querySelector("#update-ticket");
+
+        updateTicket.addEventListener("click", function(e) {
+            return renderUpdateTicket(ticket);
+        })
+
+        existingTickets.appendChild(element);
+    });
+}
+
+function renderUpdateTicket(ticket) {
+    let container = document.getElementById("container");
+
+    while (container.firstChild) {
+        container.removeChild(container.firstChild);
+    }
+    
+    container.innerHTML = `<div class="ticket-container">
+        <div class="ticket">
+            <a href="" id="back"><- Tillbaka</a>
+            <h1>Uppdatera ärende ${ticket.id}</h1>
+            <div>${JSON.stringify(ticket)}</div>
+            <form id="update-ticket-form">
+                <label for="trainnumber">Tåg nummer:</label><br>
+                <input type="text" id="trainnumber" name="trainnumber" value="${ticket.trainnumber}"><br>
+                <label>Orsakskod</label><br>
+                <select id="reason-code"></select><br><br>
+                <label for="traindate">Datum:</label><br>
+                <input type="date" id="traindate" name="traindate" value="${ticket.traindate}"><br>
+                <input type="submit" value="Uppdaterat ärende" />
+            </form>
+        </div>`;
+
+    let backButton = document.getElementById("back");
+    let reasonCodeSelect = document.getElementById("reason-code");
+    // let trainnumberInput = document.getElementById("trainnumber");
+    // let traindateInput = document.getElementById("traindate");
+    let updateTicketForm = document.getElementById("update-ticket-form");
+
+    backButton.addEventListener("click", function(event) {
+        event.preventDefault();
+
+        renderMainView();
+    });
+
+    fetch(`${backend}/codes`)
+    .then((response) => response.json())
+    .then((result) => {
+        result.data.forEach((code) => {
+            let element = document.createElement("option");
+
+            element.textContent = `${code.Code} - ${code.Level3Description}`;
+            element.value = code.Code;
+
+            reasonCodeSelect.appendChild(element);
+        });
+    });
+
+    updateTicketForm.addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        var updateTicket = {
+            _id: ticket._id,
+            code: reasonCodeSelect.value,
+            trainnumber: trainnumber.value,
+            traindate: traindate.value,
+        };
+
+        fetch(`${backend}/tickets`, {
+            body: JSON.stringify(updateTicket),
+            headers: {
+              'content-type': 'application/json'
+            },
+            method: 'PUT'
+        })
+            .then((response) => response.json())
+            .then((result) => {
+                renderMainView();
+            });
+    });
+}
+
 renderMainView();
