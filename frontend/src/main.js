@@ -8,8 +8,6 @@ createApp(App).mount('#app')
 // const backend = "https://jsramverk-train-zamo22.azurewebsites.net"
 const backend = "http://localhost:1337"
 
-// let isExistingTicketsView = true; // Add this flag to track the view
-
 function renderMainView() {
     let container = document.getElementById("container");
 
