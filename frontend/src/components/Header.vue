@@ -1,6 +1,6 @@
 <template>
-<div id="header-container">
-        <div id="header"><img src="src/assets/train-solid.svg" id="logoImage">Tågverket</div>
+    <div id="header-container">
+        <div id="header"><img src="/train-solid.svg" id="logoImage">Tågverket</div>
     </div>
 </template>
 
