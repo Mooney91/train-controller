@@ -31,8 +31,8 @@ if (process.env.NODE_ENV !== 'test') {
 
     const corsOrigin = {
         cors: {
-            // origin: "https://www.student.bth.se",
-            origin: "http://localhost:5173",
+            origin: "https://www.student.bth.se",
+            // origin: "http://localhost:5173",
             methods: ["GET", "POST", "PUT"]
         }
     };
