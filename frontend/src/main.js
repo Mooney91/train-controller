@@ -1,12 +1,14 @@
 import './assets/main.css'
 
-import { createApp, render } from 'vue'
+import { createApp, onRenderTracked, render } from 'vue'
 import App from './App.vue'
 
 createApp(App).mount('#app')
 
 // const backend = "https://jsramverk-train-zamo22.azurewebsites.net"
 const backend = "http://localhost:1337"
+
+// let isExistingTicketsView = true; // Add this flag to track the view
 
 function renderMainView() {
     let container = document.getElementById("container");
@@ -16,21 +18,16 @@ function renderMainView() {
     }
 
     container.innerHTML = `<div class="delayed">
-                <h1>Försenade tåg</h1>
-                <button id="existing-tickets">Hantera befintliga ärenden</button>
+                <button id="tickets-button">Hantera befintliga ärenden</button>
+                <h1 id="logo">Försenade tåg</h1> 
                 <div id="delayed-trains" class="delayed-trains"></div>
             </div>
             <div id="map" class="map"></div>`;
 
     // FOR TICKETS
-
-    let existingTickets = document.getElementById("existing-tickets")
-    existingTickets.addEventListener("click", function(e) {
-        fetch(`${backend}/tickets`)
-            .then((response) => response.json())
-            .then((result) => {
-                return renderExistingTickets(result.data)
-            });
+    let existingTickets = document.getElementById("tickets-button")
+    existingTickets.addEventListener("click", function(e) { 
+        return renderExistingTickets()
     })
 
     // FOR MAP
@@ -73,7 +70,16 @@ function renderMap(delayedData) {
 
                 marker.setLatLng(data.position);
             } else {
-                let marker = L.marker(data.position).addTo(map);
+                var roundRedMarker = L.divIcon({
+                    className: "custom-icon",
+                    iconSize: [20, 20],
+                    // html: '<div style="background-color: red; width: 30px; height: 30px; border-radius: 50%;"></div>',
+                    html: `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40">
+                    <circle cx="20" cy="20" r="14" fill="#FF0000" stroke="#742227" stroke-width="2" />
+                    <circle cx="20" cy="20" r="4" fill="#742227" />
+                  </svg>`,
+                  });
+                let marker = L.marker(data.position, { icon: roundRedMarker }).addTo(map);
                 marker.bindPopup(data.trainnumber);
                 markers[data.trainnumber] = marker
                 marker.on('click', function (e) {
@@ -271,7 +277,6 @@ function renderSingleView(delayedTrainNumber = "", data = {}) {
         renderSingleTable(data);
         renderSingleMap(data);
     }
-
 }
 
 function renderSingleMap(data) {
@@ -296,46 +301,79 @@ function renderSingleTable(data) {
         });
 }
 
-function renderExistingTickets(data) {
-    let container = document.getElementById("container");
+function renderExistingTickets() {
+    // SOCKET CREATED
+    const socket = io(backend);
+    socket.on("tickets", (data) => {
+ 
+        let container = document.getElementById("container");
 
-    while (container.firstChild) {
-        container.removeChild(container.firstChild);
-    }
-    
-    container.innerHTML = `<div class="ticket-container">
-        <div class="ticket">
-            <a href="" id="back"><- Tillbaka</a>
-            <h1>Hantera befintliga ärenden</h1>
-                
-            <div id="existing-tickets"></div>
-        </div>`;
-
-    let backButton = document.getElementById("back");
-    let existingTickets = document.getElementById("existing-tickets");
-
-    backButton.addEventListener("click", function(event) {
-        event.preventDefault();
-
-        renderMainView();
-    });
-
-    data.forEach((ticket) => {
-        let element = document.createElement("div");
-
-        element.innerHTML = `${ticket.id} - ${ticket.code} - ${ticket.trainnumber} - ${ticket.traindate} <button id="update-ticket">Uppdatera</button>`;
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
         
-        let updateTicket = element.querySelector("#update-ticket");
+        container.innerHTML = `<div class="ticket-container">
+            <div class="ticket">
+                <a href="" id="back"><- Tillbaka</a>
+                <h1>Hantera befintliga ärenden</h1>
+                <div id="existing-tickets"></div>
 
-        updateTicket.addEventListener("click", function(e) {
-            return renderUpdateTicket(ticket);
+            </div>`;
+
+        let backButton = document.getElementById("back");
+        let existingTickets = document.getElementById("existing-tickets");
+
+        backButton.addEventListener("click", function(event) {
+            event.preventDefault();
+
+            renderMainView();
+        });
+        
+        data.forEach((ticket) => {
+            let element = document.createElement("div");
+            element.classList.add("single-ticket")
+
+            element.innerHTML = `${ticket.id} - ${ticket.code} - ${ticket.trainnumber} - ${ticket.traindate}`;
+
+            // IF THE TICKET IS LOCKED, ADD ÄNDRA STATUS BUTTON WHICH CHANGES LOCKED TO FALSE
+            if (ticket.locked) {
+                element.classList.add("locked")
+                let buttonElement = document.createElement("button");
+                buttonElement.classList.add("changeStatusButton");
+                buttonElement.textContent = "Ändra status";
+                buttonElement.addEventListener("click", function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    // CHANGE LOCKED TO FALSE
+                    socket.emit("changeStatus", ticket._id);
+                })
+                element.appendChild(buttonElement);
+            } 
+
+            // IF THE TICKET IS CLICKED AND ALERT WILL APPEAR IF LOCKED, OTHERWISE ALLOW TICKET UPDATE
+            element.addEventListener("click", function(e) {
+                if (ticket.locked) {
+                    alert("Det här ärendet är för närvarande låst av en annan användare.")
+                } else {
+                    // CHANGE LOCKED TO TRUE AND ENSURE THAT SOCKET IS COMPLETE BEFORE RENDERING PAGE
+                    socket.emit("changeStatus", ticket._id, function(response) {
+                        // CHECK IF THE SOCKET.ON IS DONE ON THE BACKEND
+                        if (response.success) {
+                            renderUpdateTicket(ticket);
+                        } else {
+                            alert("Ett fel uppstod under uttagets drift.");
+                        };
+                    });
+                };
+            })
+
+            existingTickets.appendChild(element);
         })
-
-        existingTickets.appendChild(element);
     });
 }
 
 function renderUpdateTicket(ticket) {
+    // isExistingTicketsView = false;
     let container = document.getElementById("container");
 
     while (container.firstChild) {
@@ -404,6 +442,6 @@ function renderUpdateTicket(ticket) {
                 renderMainView();
             });
     });
-}
+};
 
 renderMainView();
