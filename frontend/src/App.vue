@@ -1,15 +1,18 @@
 <script>
-    import TrafficController from './components/TrafficController.vue'
+    import TrafficController from './components/TrafficController.vue';
+    import Header from './components/Header.vue';
 
     export default {
     name: 'App',
     components: {
-        TrafficController
+        TrafficController,
+        Header
     }
     }
 </script>
 
 <template>
+    <Header></Header>
     <TrafficController msg="Välkommen till Traffic Controller"/>
 </template>
 
