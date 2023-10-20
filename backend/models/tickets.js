@@ -18,14 +18,17 @@ const tickets = {
             };
 
             allTickets = await db.collection.find({}, options).toArray();
-            // console.log(allTickets);
 
             await db.client.close();
         }
 
-        return res.status(200).json({
-            data: allTickets
-        });
+        if (res !== undefined) {
+            return res.status(200).json({
+                data: allTickets
+            });
+        } else {
+            return allTickets;
+        }
     },
 
     createTicket: async function createTicket(req, res) {
@@ -76,7 +79,6 @@ const tickets = {
             }
         }
 
-
         return res.status(201).json({
             data: {
                 id: newId,
@@ -123,6 +125,34 @@ const tickets = {
             }
         });
 
+    },
+
+    changeStatus: async function changeStatus(data) {
+        const db = database.getDb();
+        const ObjectId = require('mongodb').ObjectId;
+        const filter = { _id: new ObjectId(data) };
+        const document = await db.collection.findOne(filter, { _id: 0, locked: 1 });
+        console.log(document);
+
+        let status;
+
+        if (document) {
+            status = !document.locked;
+        } else {
+            status = true;
+        }
+        
+        const updateDocument = {
+            $set: {
+                locked: status,
+            }
+        };
+
+         // UPDATE DOCUMENT
+         const result = await db.collection.updateOne(
+            filter,
+            updateDocument,
+        );
     }
 };
 
