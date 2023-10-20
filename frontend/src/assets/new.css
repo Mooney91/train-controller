@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond&family=Open+Sans&display=swap');
+
+html {
+    font-family: 'Open Sans', sans-serif;
+    background-color: #F2F2F2;
+}
+
+#header {
+    position: relative;
+}
+
+#header {
+    margin: 0 auto;
+    background-color: #742227;
+    color: #ffffff;
+    padding: 10px;
+    padding-left: 30px;
+    font-weight: 600;
+    font-size: 2em;
+}
+
+#logo {
+    font-weight: 500;
+    color: #ffffff;
+    background-color: #ff0000;
+    width: 100%;
+    padding: 5px;
+}
+
+.ticket-view {
+    background-color: #742227;
+    color: #ffffff;
+    box-shadow: none;
+    padding: 4px;
+}
+
+#tickets-button {
+    /* display: flex;
+    justify-content: space-between; */
+    border-color: #742227;
+    color: #4F5051;
+    background-color: white;
+    height: 35px;
+    width: 175px;
+    margin: 5px;
+}
+
+#tickets-button:hover{
+    color: white;
+    background-color: #742227;
+}
+
+#logoImage {
+    display: inline-block;
+    margin-top: 8px;
+    margin-right:5px;
+    height: 30px;
+    width: auto;
+    filter: invert(100%) sepia(0%) saturate(1%) hue-rotate(83deg) brightness(108%) contrast(101%);
+}
+
+.single-ticket {
+    border-style: solid;
+    background-color: #F2F2F2;
+    margin: 10px;
+    border-radius: 25px;
+    padding: 10px
+
+}
+
+.locked {
+    background-color: #ff0000 
+}
+
+.changeStatusButton {
+    border-color: #742227;
+    color: #4F5051;
+    background-color: white;
+    /* height: 35px;
+    width: 175px; */
+    padding: 5px;
+    margin-left: 10px;
+}
+
+/* table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
+tr:nth-child(2n) {
+    border-bottom: 2px solid red; Change the color and thickness as needed */
+/* } */

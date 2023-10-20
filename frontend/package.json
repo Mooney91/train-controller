@@ -11,6 +11,7 @@
     "deploy": "npm run build && rsync -av --delete dist/ zamo22@ssh.student.bth.se:www/train-controller"
   },
   "dependencies": {
+    "socket.io-client": "^4.7.2",
     "vue": "^3.3.4"
   },
   "devDependencies": {
