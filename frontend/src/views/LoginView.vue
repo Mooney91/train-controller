@@ -12,6 +12,7 @@
         <input type="submit" value="Logga in" class="button loginButton" @click="login"/>
         <input type="button" value="Registrera" class="button registerButton" @click="register" />
       </form>
+      <div class="registration-success"></div>
     </div>
 </template>
   
@@ -74,8 +75,6 @@ import { useUserStore } from '../stores/UserStore';
         this.userStore.addUser(result.data);
         this.$router.push(`/`);
 
-
-        
       },
       async register() {
         const user = {
@@ -92,6 +91,13 @@ import { useUserStore } from '../stores/UserStore';
         });
                         
         const result = await response.json();
+
+        let registrationSuccess = document.getElementsByClassName("registration-success");
+        let successRegistration = document.createElement("div");
+
+        successRegistration.classList.add("success");
+        successRegistration.textContent = "Registreringen lyckades!"
+        registrationSuccess[0].appendChild(successRegistration);
 
         console.log(result);   
       },

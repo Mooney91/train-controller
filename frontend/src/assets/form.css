@@ -79,3 +79,32 @@
     background-color: #742227;
     color: #fff;
 }
+
+.success {
+  position: relative;
+  z-index: 13;
+  margin: 0 auto;
+  padding: 0 0 0 35px;
+  float: left;
+  border: solid 13px Green;
+  background-color: Green;
+  font-family: 'Helvetica Neue', Helvetica, Arial, Sans-Serif;
+  font-size: 15px;
+  line-height: 16px;
+  color: #FFF;
+  overflow: hidden;
+}
+
+.success:after {
+  content: "";
+  position: absolute;
+  z-index: 12;
+  width: 10px;
+  height: 19px;
+  bottom: 0;
+  left: 5px;
+  border: solid 2px #FFF;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg);
+}
