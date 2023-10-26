@@ -1,100 +1,29 @@
 <script>
-    import TrafficController from './components/TrafficController.vue';
-    import Header from './components/Header.vue';
+    import { useUserStore } from './stores/UserStore'
+    import NavigationComponent from './components/NavigationComponent.vue';
 
     export default {
-    name: 'App',
-    components: {
-        TrafficController,
-        Header
-    }
+        name: 'App',
+        components: {
+            NavigationComponent
+        },
+        setup() {
+            const userStore = useUserStore()
+
+            return {userStore}
+        },
+        data()  {
+            return {
+                backend: "http://localhost:1337"
+            }
+        }
     }
 </script>
 
 <template>
-    <Header></Header>
-    <TrafficController msg="Välkommen till Traffic Controller"/>
+    <NavigationComponent></NavigationComponent>
+    <router-view :backend="backend"></router-view>
 </template>
 
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html {
-    font-size: 100%;
-}
-
-body {
-    line-height: 1.4;
-    font-family: sans-serif;
-}
-
-h1 {
-    font-size: 1.8rem;
-}
-
-h2 {
-    font-size: 1.6rem;
-    margin-bottom: 1.4rem;
-}
-
-p {
-    margin-bottom: 1.4rem;
-    font-size: 1rem;
-}
-
-.container {
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-}
-
-.delayed {
-    height: 100vh;
-    width: 40vw;
-    padding: 2rem;
-    overflow: scroll;
-    background-color: white;
-}
-
-.map {
-    height: 100vh;
-    width: 60vw;
-}
-
-.delayed-trains {
-    display: flex;
-    flex-direction: column;
-}
-
-.delayed-trains>div {
-    display: flex;
-    flex-direction: row;
-    border-top: 1px solid #ccc;
-    padding: 0.2rem 0.8rem;
-    align-items: center;
-    cursor: pointer;
-}
-
-.delayed-trains>div:nth-of-type(2n) {
-    background-color: #eee;
-}
-
-.train-number {
-    font-size: 2rem;
-    font-weight: bold;
-    width: 30%;
-}
-
-.current-station {
-    width: 30%;
-}
-
-.ticket-container {
-    padding: 2rem;
-}
-
 </style>

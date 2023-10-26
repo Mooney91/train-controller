@@ -10,8 +10,10 @@ const delayed = require('./routes/delayed.js');
 const tickets = require('./routes/tickets.js');
 const codes = require('./routes/codes.js');
 const position = require('./routes/position.js');
+const auth = require('./routes/auth.js');
 const ticketModel = require('./models/tickets.js');
-const { OrderedBulkOperation } = require('mongodb');
+const authModel = require('./models/auth.js');
+// const { OrderedBulkOperation } = require('mongodb');
 
 const app = express();
 const httpServer = require("http").createServer(app);
@@ -31,8 +33,8 @@ if (process.env.NODE_ENV !== 'test') {
 
     const corsOrigin = {
         cors: {
-            origin: "https://www.student.bth.se",
-            // origin: "http://localhost:5173",
+            // origin: "https://www.student.bth.se",
+            origin: "http://localhost:5173",
             methods: ["GET", "POST", "PUT"]
         }
     };
@@ -55,10 +57,16 @@ app.get('/', (req, res) => {
     });
 });
 
+app.get("/token", (req, res) => authModel.createToken(req, res));
+
 app.use("/delayed", delayed);
-app.use("/tickets", tickets);
+app.use("/delayed/single", delayed);
+app.use("/delayed/otn", delayed);
+app.use("/tickets", (req, res, next) => authModel.checkToken(req, res, next), tickets);
+// app.use("/tickets", tickets);
 app.use("/codes", codes);
 app.use("/position", position);
+app.use("/auth", auth);
 
 const server = httpServer.listen(port, async () => {
     console.log(`Train controller app listening on port ${port}`);
@@ -72,14 +80,17 @@ if (process.env.NODE_ENV !== 'test') {
 // LOCK TICKETS WHEN THEY ARE BEING USED
 io.sockets.on('connection', async function(socket) {
     // SEND NEW TICKET DATA TO FRONTEND
-    let result = await ticketModel.getTickets()
-    socket.emit("tickets", result)
+
+    let result = await ticketModel.getTickets();
+
+    socket.emit("tickets", result);
 
     socket.on("changeStatus", async function(data, callback) {
         console.log("My data is:" + data);
         try {
             await ticketModel.changeStatus(data);
             let result = await ticketModel.getTickets();
+
             io.emit("tickets", result);
 
             // IS socket.on("changeStatus") FINISHED?
@@ -92,8 +103,8 @@ io.sockets.on('connection', async function(socket) {
                 callback({ success: false, error: error.message });
             }
         }
-    });;
-})
+    });
+});
 
 // Export is used to start server when testing with chai-http
 module.exports = server;
