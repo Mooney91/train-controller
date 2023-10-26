@@ -33,8 +33,8 @@ if (process.env.NODE_ENV !== 'test') {
 
     const corsOrigin = {
         cors: {
-            // origin: "https://www.student.bth.se",
-            origin: "http://localhost:5173",
+            origin: "https://www.student.bth.se",
+            // origin: "http://localhost:5173",
             methods: ["GET", "POST", "PUT"]
         }
     };
@@ -77,35 +77,34 @@ if (process.env.NODE_ENV !== 'test') {
     fetchTrainPositions(io);
 
 
-// LOCK TICKETS WHEN THEY ARE BEING USED
-io.sockets.on('connection', async function(socket) {
-    // SEND NEW TICKET DATA TO FRONTEND
+    // LOCK TICKETS WHEN THEY ARE BEING USED
+    io.sockets.on('connection', async function(socket) {
+        // SEND NEW TICKET DATA TO FRONTEND
 
-    let result = await ticketModel.getTickets();
+        let result = await ticketModel.getTickets();
 
-    socket.emit("tickets", result);
+        socket.emit("tickets", result);
 
-    socket.on("changeStatus", async function(data, callback) {
-        console.log("My data is:" + data);
-        try {
-            await ticketModel.changeStatus(data);
-            let result = await ticketModel.getTickets();
+        socket.on("changeStatus", async function(data, callback) {
+            console.log("My data is:" + data);
+            try {
+                await ticketModel.changeStatus(data);
+                let result = await ticketModel.getTickets();
 
-            io.emit("tickets", result);
+                io.emit("tickets", result);
 
-            // IS socket.on("changeStatus") FINISHED?
-            if (callback) {
-                callback({ success: true });
+                // IS socket.on("changeStatus") FINISHED?
+                if (callback) {
+                    callback({ success: true });
+                }
+            } catch (error) {
+                // ERROR SENT IF IT GOES WRONG
+                if (callback) {
+                    callback({ success: false, error: error.message });
+                }
             }
-        } catch (error) {
-            // ERROR SENT IF IT GOES WRONG
-            if (callback) {
-                callback({ success: false, error: error.message });
-            }
-        }
+        });
     });
-});
-
 }
 // Export is used to start server when testing with chai-http
 module.exports = server;
