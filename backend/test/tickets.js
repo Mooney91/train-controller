@@ -2,7 +2,7 @@
 
 process.env.NODE_ENV = "test";
 //process.env.DB = "sqlite"; // DB is set in test script in package.json
-//process.env.DB = "mongo";
+process.env.DB = "mongo";
 
 const server = require("../app.js");
 const database = require("../db/database.js");
