@@ -14,8 +14,8 @@
         },
         data()  {
             return {
-                backend: "http://localhost:1337"
-                // backend: "https://jsramverk-train-zamo22.azurewebsites.net"
+                // backend: "http://localhost:1337"
+                backend: "https://jsramverk-train-zamo22.azurewebsites.net"
             }
         }
     }
