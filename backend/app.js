@@ -72,10 +72,10 @@ const server = httpServer.listen(port, async () => {
     console.log(`Train controller app listening on port ${port}`);
 });
 
-// Skip train positions when testing
+// Skip when testing
 if (process.env.NODE_ENV !== 'test') {
     fetchTrainPositions(io);
-}
+
 
 // LOCK TICKETS WHEN THEY ARE BEING USED
 io.sockets.on('connection', async function(socket) {
@@ -106,6 +106,7 @@ io.sockets.on('connection', async function(socket) {
     });
 });
 
+}
 // Export is used to start server when testing with chai-http
 module.exports = server;
 
