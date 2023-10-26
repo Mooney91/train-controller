@@ -16,6 +16,7 @@ if (process.env.NODE_ENV === 'test') {
 }
 
 const collectionName = "tickets";
+const authCollection = "auth";
 
 const database = {
     openDb: async function openDb() {
@@ -39,6 +40,30 @@ const database = {
 
             const db = client.db(dbName);
             const collection = db.collection(collectionName);
+
+            return {
+                db: db,
+                collection: collection,
+                client: client,
+            };
+        } catch (err) {
+            console.log(`Error connecting to MongoDB database: ${dbName} with DSN: ${dsnMongo}`);
+            console.log(err);
+        }
+    },
+
+    getAuth: function() {
+        // console.log(`*** getDb: Database: ${dbName} DSN: ${dsnMongo} ***`);
+
+        try {
+            const client = new MongoClient(dsnMongo, { monitorCommands: true });
+
+            client.on("commandFailed", (event) => {
+                console.log(`Received commandFailed: ${JSON.stringify(event, null, 2)}`);
+            });
+
+            const db = client.db(dbName);
+            const collection = db.collection(authCollection);
 
             return {
                 db: db,

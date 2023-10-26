@@ -1,3 +1,5 @@
+/* eslint max-len: "off" */
+
 const fetch = require('node-fetch');
 
 const trainPosition = {
@@ -20,20 +22,26 @@ const trainPosition = {
             return response.json();
         }).then(function(result) {
             const changedPosition = result.RESPONSE.RESULT[0].TrainPosition[0];
-            const matchCoords = /(\d*\.\d+|\d+),?/g;
-            const position = changedPosition.Position.WGS84.match(matchCoords)
-                .map((t=>parseFloat(t))).reverse();
-            const trainObject = {
-                trainnumber: changedPosition.Train.OperationalTrainNumber,
-                position: position,
-                timestamp: changedPosition.TimeStamp,
-                bearing: changedPosition.Bearing,
-                status: !changedPosition.Deleted,
-                speed: changedPosition.Speed,
-            };
-            return res.json({
-                data: trainObject
-            });
+
+            if (changedPosition) {
+                const matchCoords = /(\d*\.\d+|\d+),?/g;
+                const position = changedPosition.Position.WGS84.match(matchCoords)
+                    .map((t=>parseFloat(t))).reverse();
+                const trainObject = {
+                    trainnumber: changedPosition.Train.OperationalTrainNumber,
+                    position: position,
+                    timestamp: changedPosition.TimeStamp,
+                    bearing: changedPosition.Bearing,
+                    status: !changedPosition.Deleted,
+                    speed: changedPosition.Speed,
+                };
+
+                return res.json({
+                    data: trainObject
+                });
+            } else {
+                console.log("No position data can be found for this train.");
+            }
         });
     }
 };

@@ -1,3 +1,5 @@
+/* eslint no-undef: "off" */
+
 import { fileURLToPath, URL } from 'node:url'
 
 import { defineConfig } from 'vite'

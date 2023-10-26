@@ -34,12 +34,13 @@ const tickets = {
     createTicket: async function createTicket(req, res) {
         let newId = 0;
 
+        console.log("Entered createTicket");
         if (process.env.DB === 'sqlite') {
             const db = await database.openDb();
 
             const result = await db.run(
                 'INSERT INTO tickets (code, trainnumber, traindate) VALUES (?, ?, ?)',
-                [ req.body.code, req.body.trainnumber, req.body.traindate],
+                [ req.body.code, req.body.trainnumber, req.body.traindate ],
                 async (err) => {
                     if (err) {
                         await db.close();
@@ -124,7 +125,6 @@ const tickets = {
                 traindate: req.body.traindate,
             }
         });
-
     },
 
     changeStatus: async function changeStatus(data) {
@@ -132,6 +132,7 @@ const tickets = {
         const ObjectId = require('mongodb').ObjectId;
         const filter = { _id: new ObjectId(data) };
         const document = await db.collection.findOne(filter, { _id: 0, locked: 1 });
+
         console.log(document);
 
         let status;
@@ -141,18 +142,20 @@ const tickets = {
         } else {
             status = true;
         }
-        
+
         const updateDocument = {
             $set: {
                 locked: status,
             }
         };
 
-         // UPDATE DOCUMENT
-         const result = await db.collection.updateOne(
+        // UPDATE DOCUMENT
+        const result = await db.collection.updateOne(
             filter,
             updateDocument,
         );
+
+        console.log(result);
     }
 };
 

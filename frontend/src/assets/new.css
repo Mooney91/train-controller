@@ -31,12 +31,11 @@ html {
     background-color: #742227;
     color: #ffffff;
     box-shadow: none;
-    padding: 4px;
+    padding: 7px;
+    margin: 10px;
 }
 
 #tickets-button {
-    /* display: flex;
-    justify-content: space-between; */
     border-color: #742227;
     color: #4F5051;
     background-color: white;
@@ -59,38 +58,32 @@ html {
     filter: invert(100%) sepia(0%) saturate(1%) hue-rotate(83deg) brightness(108%) contrast(101%);
 }
 
-.single-ticket {
-    border-style: solid;
-    background-color: #F2F2F2;
-    margin: 10px;
-    border-radius: 25px;
-    padding: 10px
+/* TOAST */
 
+.toast {
+    position: fixed;
+    bottom: 50;
+    right: 0;
+    transform: translateY(100%);
+    opacity: 0;
+    transition:
+    opacity 500ms,
+    transform 500ms;
 }
 
-.locked {
-    background-color: #ff0000 
+.toast.visible {
+    transform: translateY(0);
+    opacity: 1;
 }
 
-.changeStatusButton {
-    border-color: #742227;
-    color: #4F5051;
-    background-color: white;
-    /* height: 35px;
-    width: 175px; */
-    padding: 5px;
-    margin-left: 10px;
+.toast-body {
+    margin: 28px;
+    padding: 20px 24px;
+    background-color: rgb(140, 206, 247);
+    color: rgb(1, 1, 160);
+    border-radius: 4px;
 }
 
-/* table {
-    border-collapse: collapse;
-    width: 100%;
+.table-info {
+    font-weight: 600;
 }
-
-table, th, td {
-    border: 1px solid black;
-}
-
-tr:nth-child(2n) {
-    border-bottom: 2px solid red; Change the color and thickness as needed */
-/* } */
