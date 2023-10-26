@@ -1,0 +1,87 @@
+.warning-box {
+    background-color: #ff9999;
+    border: 2px solid #ff3333;
+    border-radius: 5px;
+    padding: 15px;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+}
+  
+.warning-box p {
+    font-size: 50px;
+    font-weight: 800;
+}
+
+.warning-box::before {
+    content: "⚠";
+    font-size: 50px;
+    font-weight: 800;
+    margin-right: 10px;
+}
+
+.single-ticket {
+  margin: 10px; 
+  display: inline-block;
+  background-color: #f0f0f0;
+  border-radius: 10px; 
+  border-color:#742227;
+  border-style: solid;
+  border-width: 2px;
+  padding: 10px; 
+  flex-direction: column;
+  width: 200px;
+  height:160px;
+}
+
+.single-ticket p {
+  margin: 0;
+}
+
+.single-ticket button {
+  float: right;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.ticket-number {
+  font-style: italic;
+  font-size: 1.5rem;
+}
+
+.ticket-field {
+  font-weight: 700;
+}
+
+.locked {
+    background-color: #CB8589;
+}
+
+.changeStatusButton {
+    border-color: #742227;
+    color: #4F5051;
+    background-color: white;
+    padding: 5px;
+    margin-left: 10px;
+}
+
+.train-info {
+  background-color: #A491D3;
+  margin: 10px;
+  padding: 10px;
+  width: max-content;
+  font-size: 3rem;
+  display: inline-block;
+}
+
+.train-info p {
+  font-size: 2rem;
+}
+
+.info-bold {
+  font-weight: 600;
+}
+
+.red {
+  color: #ff0000;
+}

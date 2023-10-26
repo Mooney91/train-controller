@@ -1,0 +1,16 @@
+.back {
+    text-decoration: none;
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #f1f1f1;
+    color: black;
+    margin: 10px;
+    border-style: solid;
+    border-color: #742227;
+    text-align: center;
+}
+
+.back:hover {
+    background-color: #ddd;
+    color: #000000;
+}
